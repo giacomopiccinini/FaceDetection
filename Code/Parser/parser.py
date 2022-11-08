@@ -18,7 +18,7 @@ def parse():
         type=str,
         help="Directory where media is stored, or file or webcam",
     )
-    
+
     parser.add_argument(
         "--model",
         const="Model/mmod_human_face_detector.dat",

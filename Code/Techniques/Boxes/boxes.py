@@ -1,14 +1,14 @@
 def convert_and_trim_bb(image, rectangle):
-    
+
     """
     Convert the bounding box expression from
-        (left, right, top, bottom) to 
+        (left, right, top, bottom) to
         (startX, startY, width, height)
 
     Returns:
         Tuple: (startX, startY, width, height)
     """
-	# Extract the dlib bounding box features
+    # Extract the dlib bounding box features
     startX = rectangle.left()
     startY = rectangle.top()
     endX = rectangle.right()
@@ -22,7 +22,7 @@ def convert_and_trim_bb(image, rectangle):
     endY = min(endY, image.shape[0])
 
     # Compute the width and height of the bounding box
-    width  = endX - startX
+    width = endX - startX
     height = endY - startY
 
     return (startX, startY, width, height)
