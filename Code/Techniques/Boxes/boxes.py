@@ -1,3 +1,5 @@
+import cv2
+
 def convert_and_trim_bb(image, rectangle):
 
     """
@@ -26,3 +28,18 @@ def convert_and_trim_bb(image, rectangle):
     height = endY - startY
 
     return (startX, startY, width, height)
+
+
+def write_boxes(image, results):
+    
+    """Write boxes from detection to image
+    """
+
+    # Fetch boxes
+    boxes = [convert_and_trim_bb(image, r.rect) for r in results]
+    
+    # Write bounding box on image
+    for (x, y, w, h) in boxes:
+        cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        
+    return image
