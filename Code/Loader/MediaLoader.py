@@ -30,7 +30,9 @@ class MediaLoader:
                 raise Exception(f"ERROR: {path} does not exist")
             self.files = [Image.from_path(file.__str__()) for file in files]
 
-    def __getitem__(self, i):
+    def __getitem__(self, i:int):
+        
+        """ Return the i-th element of the Loader, in the form (image, name)"""
 
         if self.mode == "Stream":
 
@@ -40,7 +42,7 @@ class MediaLoader:
             except:
                 raise Exception(f"ERROR loading the stream")
 
-            return frame
+            return frame, "Stream"
 
         else:
-            return self.files[i].tensor
+            return self.files[i].tensor, self.files[i].name
