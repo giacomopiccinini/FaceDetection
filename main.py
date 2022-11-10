@@ -13,7 +13,7 @@ if __name__ == "__main__":
 
     # Parse arguments
     args = parse()
-
+    
     # Check CUDA availability
     cuda_is_available = dlib.cuda.get_num_devices() > 0
     log.info(f"Cuda is available: {cuda_is_available}")
@@ -30,19 +30,33 @@ if __name__ == "__main__":
     i = 0
     while True:
         try:
-            image = Loader[i]
+            
+            # Load i-th image (or frame)
+            image, name = Loader[i]
+                        
+            # Detect faces
             results = detector(image)
+            
+            # Write bounding boxes onto the image
             boxed_image = write_boxes(image, results)
+            
+            # Move to next image
             i += 1
 
-            cv2.imshow("Result", boxed_image)
+            # Show image (on request)
+            if args.show:
+                cv2.imshow(name, boxed_image)
+                cv2.waitKey(0)
+                
+            print(args.save)
+            print(args.show)
+                
+            # Save image (on request)
+            if args.save:
+                cv2.imwrite(name, boxed_image)
 
-            if cv2.waitKey(1) & 0xFF == ord("q"):
-                break
         except:
             break
-
-    cv2.waitKey(0)
 
     # Closing all open windows
     cv2.destroyAllWindows()
