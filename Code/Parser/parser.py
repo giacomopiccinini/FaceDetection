@@ -27,6 +27,18 @@ def parse():
         type=str,
         help="Path to model to be loaded",
     )
+    
+    parser.add_argument(
+        "--show",
+        action='store_true',
+        help="Show (or not) the results of face detection",
+    )
+    
+    parser.add_argument(
+        "--save",
+        action='store_true',
+        help="Save (or not) the results of face detection",
+    )
 
     # Parse arguments
     args = parser.parse_args()
