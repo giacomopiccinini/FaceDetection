@@ -5,3 +5,4 @@ venv/
 *.ipynb
 *.hdf5
 *.pt
+dlib/
