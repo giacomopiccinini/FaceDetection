@@ -27,7 +27,7 @@ def parse():
         type=str,
         help="Path to model to be loaded",
     )
-    
+
     parser.add_argument(
         "--upsample",
         const=1,
@@ -36,16 +36,16 @@ def parse():
         type=int,
         help="How many times to upsample the image in order to detect faces",
     )
-    
+
     parser.add_argument(
         "--show",
-        action='store_true',
+        action="store_true",
         help="Show (or not) the results of face detection",
     )
-    
+
     parser.add_argument(
         "--save",
-        action='store_true',
+        action="store_true",
         help="Save (or not) the results of face detection",
     )
 

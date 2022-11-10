@@ -30,9 +30,9 @@ class MediaLoader:
                 raise Exception(f"ERROR: {path} does not exist")
             self.files = [Image.from_path(file.__str__()) for file in files]
 
-    def __getitem__(self, i:int):
-        
-        """ Return the i-th element of the Loader, in the form (image, name)"""
+    def __getitem__(self, i: int):
+
+        """Return the i-th element of the Loader, in the form (image, name)"""
 
         if self.mode == "Stream":
 
