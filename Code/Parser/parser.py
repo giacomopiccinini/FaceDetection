@@ -29,6 +29,15 @@ def parse():
     )
     
     parser.add_argument(
+        "--upsample",
+        const=1,
+        default=1,
+        nargs="?",
+        type=int,
+        help="How many times to upsample the image in order to detect faces",
+    )
+    
+    parser.add_argument(
         "--show",
         action='store_true',
         help="Show (or not) the results of face detection",
