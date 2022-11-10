@@ -64,7 +64,7 @@ if __name__ == "__main__":
 
             # Save image (on request)
             if args.save:
-                cv2.imwrite(name, boxed_image)
+                cv2.imwrite(f"Output/{name}", boxed_image)
 
         except:
             break
