@@ -22,7 +22,9 @@ if __name__ == "__main__":
     
     # Check CUDA availability
     cuda_is_available = dlib.cuda.get_num_devices() > 0
+    cuda_is_used = dlib.DLIB_USE_CUDA
     log.info(f"Cuda is available: {cuda_is_available}")
+    log.info(f"Cuda is used: {cuda_is_used}")
 
     # Load face detector
     log.info("Loading face detection model")
