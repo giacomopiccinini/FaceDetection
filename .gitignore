@@ -5,4 +5,5 @@ venv/
 *.ipynb
 *.hdf5
 *.pt
+*.mp4
 dlib/
