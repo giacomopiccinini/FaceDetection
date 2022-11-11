@@ -3,7 +3,7 @@ import logging
 import cv2
 
 from Code.Parser.parser import parse
-from Code.Loader.Loader import MediaLoader
+from Code.Loader.MediaLoader import MediaLoader
 from Code.Techniques.Boxes.boxes import write_boxes
 from Code.Techniques.Blur.blur import blur
 
@@ -28,58 +28,43 @@ if __name__ == "__main__":
 
     # Load media
     log.info("Loading media")
-    Loader = MediaLoader(args.source)
+    Data = MediaLoader(args.source)
     
-    # Initialise video 
-    if args.save and Loader.mode == "Stream":
-        #stream = cv2.VideoWriter('stream.mp4',-1, 20.0, (640,480))
-        pass
-
-    # Create bounding boxes
-    i = 0
-    while True:
-        try:
-
-            # Load i-th image (or frame)
-            image, name = Loader[i]
-
-            # Detect faces
-            boxes = detector(image, args.upsample)
-
-            # Log results
-            log.info(f"Detected {len(boxes)} in {name}")
-
-            # Write bounding boxes onto the image
-            boxed_image = write_boxes(image, boxes)
-
-            # Move to next image
-            i += 1
-
-            # Blur image (on request)
-            if args.blur:
-                blurred = blur(image, boxes)
-
-            # Show image (on request)
-            if args.show:
-                cv2.imshow(name, boxed_image)
-                if Loader.mode == "Stream":
-                    if cv2.waitKey(1) & 0xFF == ord("q"):
-                        Loader.stream.release()
+    # Loop over images (or frames) in dataset
+    for name, image, capture in Data:
+                
+        # Detect faces
+        boxes = detector(image, args.upsample)
+        
+        # Write bounding boxes onto the image
+        boxed_image = write_boxes(image, boxes)
+        
+        # Blur image (on request)
+        if args.blur:
+            blurred = blur(image, boxes)
+                
+        # Show image (on request)
+        if args.show:
+            cv2.imshow(name, boxed_image)
+            
+            # Different rules depending on the type of data
+            if Data.mode == "Stream" or Data.mode == "Video":
+                if cv2.waitKey(1) & 0xFF == ord("q"):
+                        Data.stream.release()
                         break
-                else:
-                    cv2.waitKey(0)
-
-            # Save image (on request)
-            if args.save:
-                if args.blur:
-                    cv2.imwrite(f"Output/blurred_{name}", blurred)
-                else:
-                    #stream.write(boxed_image)
-                    cv2.imwrite(f"Output/boxed_{name}", boxed_image)
-
-        except Exception as e:
-            print(e)
-            break
-
-    # Closing all open windows
-    cv2.destroyAllWindows()
+            # Case of images
+            else:
+                cv2.waitKey(0)
+                
+        # Save image (on request)
+        if args.save:
+            
+            # Select image to write
+            image_to_write = blurred if args.blur else image
+            
+            # In the case of image
+            if Data.mode == "Image":
+                cv2.imwrite(f"Output/{name}", image_to_write)
+            # In case of stream or video
+            else:
+                pass 
