@@ -3,7 +3,7 @@ import logging
 import cv2
 
 from Code.Parser.parser import parse
-from Code.Loader.MediaLoader import MediaLoader
+from Code.Loader.Loader import MediaLoader
 from Code.Techniques.Boxes.boxes import write_boxes
 from Code.Techniques.Blur.blur import blur
 
@@ -29,6 +29,11 @@ if __name__ == "__main__":
     # Load media
     log.info("Loading media")
     Loader = MediaLoader(args.source)
+    
+    # Initialise video 
+    if args.save and Loader.mode == "Stream":
+        #stream = cv2.VideoWriter('stream.mp4',-1, 20.0, (640,480))
+        pass
 
     # Create bounding boxes
     i = 0
@@ -69,9 +74,11 @@ if __name__ == "__main__":
                 if args.blur:
                     cv2.imwrite(f"Output/blurred_{name}", blurred)
                 else:
+                    #stream.write(boxed_image)
                     cv2.imwrite(f"Output/boxed_{name}", boxed_image)
 
         except Exception as e:
+            print(e)
             break
 
     # Closing all open windows
