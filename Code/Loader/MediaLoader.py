@@ -1,4 +1,5 @@
 import cv2
+import numpy as np
 from pathlib import Path
 from yaml import safe_load
 from pymediainfo import MediaInfo
@@ -40,15 +41,14 @@ class MediaLoader:
             image_formats = d["image_formats"]
             video_formats = d["video_formats"]
 
-        # Store path and loader mode
+        # Store path
         self.path = Path(path).absolute()
-        self.mode = "Media"
 
         # Load files
 
         # If path is a directory, load all files recursively
         if self.path.is_dir():
-            files = self.path.rglob("*")
+            files = list(self.path.rglob("*"))
 
         # If is a single file, load it alone
         elif self.path.is_file():
@@ -61,10 +61,16 @@ class MediaLoader:
         # Divide between videos and images
         images = [path for path in files if path.suffix in image_formats]
         videos = [path for path in files if path.suffix in video_formats]
-
+            
         # Unite images and videos
         files = images + videos
-
+        
+        # Store loader mode
+        if len(images) > 0:
+            self.mode = "Image"
+        else:
+            self.mode = "Video"
+        
         # Retrieve shapes
         shapes = list(map(self.get_media_shape, files))
 
@@ -111,11 +117,15 @@ class MediaLoader:
         if self.count == self.n_files:
             raise StopIteration
 
-        # Select the path to media at hand
-        path = self.files[self.count]
+        # Select the path and name of the media at hand
+        path = self.files[self.count].__str__()
+        name = self.files[self.count].name
 
         # If the media is a video
         if self.video_flag[self.count]:
+            
+            # Change mode
+            self.mode = "Video"
 
             # Read framemand store if operation is successful
             successful, image_BGR = self.capture.read()
@@ -158,10 +168,7 @@ class MediaLoader:
             # Check that the image exists
             assert image_BGR is not None, f"Can't read the image at {path}"
 
-        # Convert to RGB
-        image_RGB = image_BGR[:, :, ::-1]
-
-        return path, image_RGB, image_BGR, self.capture
+        return name, image_BGR, self.capture
 
     def get_media_shape(self, media_path: Path) -> tuple:
 
@@ -181,7 +188,7 @@ class MediaLoader:
 
         return shape
 
-    def new_video(self, path) -> None:
+    def new_video(self, path: Path) -> None:
 
         """Method to be called when a new video is processed"""
 
@@ -189,7 +196,7 @@ class MediaLoader:
         self.frame = 0
 
         # Capture video using openCV
-        self.capture = cv2.VideoCapture(path)
+        self.capture = cv2.VideoCapture(path.__str__())
 
         # Get total number of frames for video at hand
         self.n_frames = int(self.capture.get(cv2.CAP_PROP_FRAME_COUNT))
