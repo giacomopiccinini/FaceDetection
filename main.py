@@ -67,9 +67,9 @@ if __name__ == "__main__":
             # Save image (on request)
             if args.save:
                 if args.blur:
-                    cv2.imwrite(f"Output/{name}", blurred)
+                    cv2.imwrite(f"Output/blurred_{name}", blurred)
                 else:
-                    cv2.imwrite(f"Output/{name}", boxed_image)
+                    cv2.imwrite(f"Output/boxed_{name}", boxed_image)
 
         except Exception as e:
             break
