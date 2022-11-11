@@ -65,7 +65,12 @@ if __name__ == "__main__":
             # Show image (on request)
             if args.show:
                 cv2.imshow(name, boxed_image)
-                cv2.waitKey(0)
+                if Loader.mode == "Stream":
+                    if cv2.waitKey(1) & 0xFF == ord("q"):
+                        Loader.stream.release()
+                        break
+                else:
+                    cv2.waitKey(0)
 
             # Save image (on request)
             if args.save:
@@ -75,7 +80,6 @@ if __name__ == "__main__":
                     cv2.imwrite(f"Output/{name}", boxed_image)
 
         except Exception as e:
-            print(e)
             break
 
     # Closing all open windows
