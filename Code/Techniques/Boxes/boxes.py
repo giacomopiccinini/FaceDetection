@@ -1,4 +1,5 @@
 import cv2
+from copy import deepcopy
 
 
 def convert_and_trim_bb(image, rectangle):
@@ -38,8 +39,11 @@ def write_boxes(image, results):
     # Fetch boxes
     boxes = [convert_and_trim_bb(image, r.rect) for r in results]
 
+    # Create copy of image where to write the boxes
+    boxed_image = deepcopy(image)
+
     # Write bounding box on image
     for (x, y, w, h) in boxes:
-        cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        cv2.rectangle(boxed_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
-    return image
+    return boxed_image
