@@ -49,6 +49,12 @@ def parse():
         help="Save (or not) the results of face detection",
     )
 
+    parser.add_argument(
+        "--blur",
+        action="store_true",
+        help="Blur (or not) the detected faces",
+    )
+
     # Parse arguments
     args = parser.parse_args()
 
