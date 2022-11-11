@@ -7,6 +7,7 @@ from chronopy.Clock import Clock
 from Code.Parser.parser import parse
 from Code.Loader.MediaLoader import MediaLoader
 from Code.Techniques.Boxes.boxes import write_boxes
+from Code.Techniques.Blur.blur import blur
 
 if __name__ == "__main__":
 
@@ -46,16 +47,20 @@ if __name__ == "__main__":
 
             # Detect faces
             clock.lap(f"Detection {name}")
-            results = detector(image, args.upsample)
+            boxes = detector(image, args.upsample)
 
             # Log results
-            log.info(f"Detected {len(results)} in {name}")
+            log.info(f"Detected {len(boxes)} in {name}")
 
             # Write bounding boxes onto the image
-            boxed_image = write_boxes(image, results)
+            boxed_image = write_boxes(image, boxes)
 
             # Move to next image
             i += 1
+
+            # Blur image (on request)
+            if args.blur:
+                blurred = blur(image, boxes)
 
             # Show image (on request)
             if args.show:
@@ -64,9 +69,13 @@ if __name__ == "__main__":
 
             # Save image (on request)
             if args.save:
-                cv2.imwrite(f"Output/{name}", boxed_image)
+                if args.blur:
+                    cv2.imwrite(f"Output/{name}", blurred)
+                else:
+                    cv2.imwrite(f"Output/{name}", boxed_image)
 
-        except:
+        except Exception as e:
+            print(e)
             break
 
     # Closing all open windows
