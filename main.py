@@ -2,8 +2,6 @@ import dlib
 import logging
 import cv2
 
-from chronopy.Clock import Clock
-
 from Code.Parser.parser import parse
 from Code.Loader.MediaLoader import MediaLoader
 from Code.Techniques.Boxes.boxes import write_boxes
@@ -14,9 +12,6 @@ if __name__ == "__main__":
     # Set logger
     logging.basicConfig(level=logging.NOTSET)
     log = logging.getLogger(__name__)
-
-    # Initiate clock
-    clock = Clock()
 
     # Parse arguments
     args = parse()
@@ -29,12 +24,10 @@ if __name__ == "__main__":
 
     # Load face detector
     log.info("Loading face detection model")
-    clock.lap("Model loading")
     detector = dlib.cnn_face_detection_model_v1(args.model)
 
     # Load media
     log.info("Loading media")
-    clock.lap("Media loading")
     Loader = MediaLoader(args.source)
 
     # Create bounding boxes
@@ -46,7 +39,6 @@ if __name__ == "__main__":
             image, name = Loader[i]
 
             # Detect faces
-            clock.lap(f"Detection {name}")
             boxes = detector(image, args.upsample)
 
             # Log results
@@ -84,6 +76,3 @@ if __name__ == "__main__":
 
     # Closing all open windows
     cv2.destroyAllWindows()
-
-    clock.lap()
-    clock.summary()
