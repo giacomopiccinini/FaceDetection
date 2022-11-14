@@ -30,6 +30,9 @@ if __name__ == "__main__":
     log.info("Loading media")
     Data = MediaLoader(args.source)
     
+    # Set variables for video writing (when necessary)
+    video_name, video_writer = None, None
+    
     # Loop over images (or frames) in dataset
     for name, image, capture in Data:
                 
@@ -65,6 +68,49 @@ if __name__ == "__main__":
             # In the case of image
             if Data.mode == "Image":
                 cv2.imwrite(f"Output/{name}", image_to_write)
+                
             # In case of stream or video
             else:
-                pass 
+                                
+                # If we can read from the video
+                if capture: 
+                    
+                    # Get video FPS
+                    fps = capture.get(cv2.CAP_PROP_FPS)
+                    
+                    # Get video width
+                    width = int(capture.get(cv2.CAP_PROP_FRAME_WIDTH))
+                    
+                    # Get video height
+                    height = int(capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
+                
+                # Initiate video name the first time    
+                if not video_name:
+                    video_name = name
+                    
+                # Case of new video
+                if video_name != name:
+                    
+                    # Release old video writer
+                    video_writer.release() 
+                    
+                    # Re-initialise video writer
+                    video_writer = None
+                    
+                    # Reset video name
+                    video_name = name
+                    
+                # If no video writer is instantiated
+                if not video_writer:
+                    
+                    # Create a new video writer
+                    video_writer = cv2.VideoWriter(f"Output/{name}", cv2.VideoWriter_fourcc(*'mp4v'), fps, (width, height))
+                    
+                    
+                # else:  # stream
+                #     fps, w, h = 30, im0.shape[1], im0.shape[0]
+                #     save_path += '.mp4'
+                    
+                
+                    
+                video_writer.write(image_to_write)
