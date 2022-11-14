@@ -59,7 +59,7 @@ if __name__ == "__main__":
             # Different rules depending on the type of data
             if Data.mode == "Stream" or Data.mode == "Video":
                 if cv2.waitKey(1) & 0xFF == ord("q"):
-                    Data.stream.release()
+                    Data.capture.release()
                     break
             # Case of images
             else:
@@ -94,7 +94,7 @@ if __name__ == "__main__":
                 else:
 
                     # Fetch values
-                    fps = Data.fps
+                    fps = 8 # Data.fps
                     width = Data.width
                     height = Data.height
 
