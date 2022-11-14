@@ -13,7 +13,7 @@ class MediaLoader:
     def __init__(self, path: str) -> None:
 
         """
-            Initialise ImageVideoLoader class starting from a path (string).
+            Initialise MediaLoader class starting from a path (string).
             The path could be either:
             - a directory
             - a file
@@ -61,16 +61,16 @@ class MediaLoader:
         # Divide between videos and images
         images = [path for path in files if path.suffix in image_formats]
         videos = [path for path in files if path.suffix in video_formats]
-            
+
         # Unite images and videos
         files = images + videos
-        
+
         # Store loader mode
         if len(images) > 0:
             self.mode = "Image"
         else:
             self.mode = "Video"
-        
+
         # Retrieve shapes
         shapes = list(map(self.get_media_shape, files))
 
@@ -123,7 +123,7 @@ class MediaLoader:
 
         # If the media is a video
         if self.video_flag[self.count]:
-            
+
             # Change mode
             self.mode = "Video"
 
