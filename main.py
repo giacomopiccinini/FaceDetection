@@ -60,7 +60,7 @@ if __name__ == "__main__":
         if args.save:
             
             # Select image to write
-            image_to_write = blurred if args.blur else image
+            image_to_write = blurred if args.blur else boxed_image
             
             # In the case of image
             if Data.mode == "Image":
