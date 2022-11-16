@@ -51,11 +51,14 @@ if __name__ == "__main__":
 
         # Blur image (on request)
         if args.blur:
-            blurred = blur(image, boxes)
+            blurred = blur(image, boxes, args.blur)
+            
+        # Select image to write (or show)
+        image_to_write = blurred if args.blur else boxed_image
 
         # Show image (on request)
         if args.show:
-            cv2.imshow(name, boxed_image)
+            cv2.imshow(name, image_to_write)
 
             # Different rules depending on the type of data
             if Data.mode == "Stream" or Data.mode == "Video":
@@ -68,9 +71,6 @@ if __name__ == "__main__":
 
         # Save image (on request)
         if args.save:
-
-            # Select image to write
-            image_to_write = blurred if args.blur else boxed_image
 
             # In the case of image
             if Data.mode == "Image":

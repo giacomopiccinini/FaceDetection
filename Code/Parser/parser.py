@@ -51,8 +51,11 @@ def parse():
 
     parser.add_argument(
         "--blur",
-        action="store_true",
-        help="Blur (or not) the detected faces",
+        const=None,
+        default=None,
+        nargs='?',
+        type=int,
+        help="Blur (or not) the detected faces, and specify level of (median) blur",
     )
 
     # Parse arguments
