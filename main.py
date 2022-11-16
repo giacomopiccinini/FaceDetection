@@ -1,6 +1,7 @@
 import dlib
 import logging
 import cv2
+from tqdm import tqdm
 
 from Code.Parser.parser import parse
 from Code.Loader.StreamLoader import StreamLoader
@@ -40,7 +41,7 @@ if __name__ == "__main__":
     video_name, video_writer = None, None
 
     # Loop over images (or frames) in dataset
-    for name, image, capture in Data:
+    for name, image, capture in tqdm(Data):
 
         # Detect faces
         boxes = detector(image, args.upsample)
