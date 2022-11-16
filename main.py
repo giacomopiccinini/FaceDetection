@@ -55,13 +55,20 @@ if __name__ == "__main__":
             
         # Select image to write (or show)
         image_to_write = blurred if args.blur else boxed_image
+        
+        # When streaming, always show the result
+        if Data.mode == "Stream":
+            cv2.imshow(name, image_to_write)
+            if cv2.waitKey(1) & 0xFF == ord("q"):
+                    Data.capture.release()
+                    break
 
-        # Show image (on request)
+        # Show image (on request) if not streaming
         if args.show:
             cv2.imshow(name, image_to_write)
 
             # Different rules depending on the type of data
-            if Data.mode == "Stream" or Data.mode == "Video":
+            if Data.mode == "Video":
                 if cv2.waitKey(1) & 0xFF == ord("q"):
                     Data.capture.release()
                     break
