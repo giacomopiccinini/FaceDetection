@@ -3,12 +3,13 @@ import logging
 import cv2
 import os
 import pickle
+import face_recognition
 from tqdm import tqdm
 
 from Code.Parser.parser import parse
 from Code.Loader.StreamLoader import StreamLoader
 from Code.Loader.MediaLoader import MediaLoader
-from Code.Modules.embed import embed_references
+from Code.Modules.encode import encode_references
 from Code.Techniques.Boxes.boxes import write_boxes
 from Code.Techniques.Blur.blur import blur
 
@@ -30,6 +31,9 @@ if __name__ == "__main__":
     # Load face detector
     log.info("Loading face detection model")
     detector = dlib.cnn_face_detection_model_v1(args.model)
+    
+    # Initialise encodings
+    encodings = None
 
     if args.source != "webcam":
         # Load media
@@ -43,21 +47,22 @@ if __name__ == "__main__":
     if args.recognize:
                 
         # Check if reference is present
-        if "embedding.pkl" in os.listdir(args.recognize):
+        if "encodings.pkl" in os.listdir(args.recognize):
             # Load reference images
-            log.info("Embedding file is present, loading it")
-            # Load embedding
+            log.info("Encodings file is present, loading it")
+            # Load encodings
             try:
-                embedding = pickle.loads(open(f"{args.recognize}/embedding.pkl", "rb").read())
-                log.info("Embedding correctly loaded")
+                encodings = pickle.loads(open(f"{args.recognize}/encodings.pkl", "rb").read())
+                log.info("Encodings correctly loaded")
             except:
-                log.error("Failed loading embedding.pkl")
+                log.error("Failed loading encodings.pkl")
         else:
-            # Create embeddings
-            log.info("Embedding not found")
-            log.info("Creating embedding")
-            # Create embedding for references
-            embedding = embed_references(args.recognize)
+            # Create encodings
+            log.info("Encodings not found")
+            log.info("Creating encodings")
+            
+            # Create encodings for references
+            encodings = encode_references(args.recognize)
 
     # Set variables for video writing (when necessary)
     video_name, video_writer = None, None
@@ -66,10 +71,13 @@ if __name__ == "__main__":
     for name, image, capture in tqdm(Data):
 
         # Detect faces
-        boxes = detector(image, args.upsample)
-
-        # Write bounding boxes onto the image
-        boxed_image = write_boxes(image, boxes)
+        #boxes = detector(image, args.upsample)
+        boxes = face_recognition.face_locations(image, model="cnn")
+                
+        # Write boxes if not blurring
+        if not args.blur:
+            # Write bounding boxes onto the image
+            boxed_image = write_boxes(image, boxes, encodings)
 
         # Blur image (on request)
         if args.blur:
