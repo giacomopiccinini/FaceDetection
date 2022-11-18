@@ -1,11 +1,13 @@
 import dlib
 import logging
 import cv2
+import os
 from tqdm import tqdm
 
 from Code.Parser.parser import parse
 from Code.Loader.StreamLoader import StreamLoader
 from Code.Loader.MediaLoader import MediaLoader
+from Code.Modules.embed import embed_references
 from Code.Techniques.Boxes.boxes import write_boxes
 from Code.Techniques.Blur.blur import blur
 
@@ -36,6 +38,21 @@ if __name__ == "__main__":
         # Load Stream
         log.info("Loading stream")
         Data = StreamLoader()
+        
+    if args.recognize:
+                
+        # Check if reference is present
+        if "embedding.pkl" in os.listdir(args.recognize):
+            # Load reference images
+            log.info("Referece file is present")
+            # Load embedding
+        else:
+            # Load reference images
+            log.info("Loading references")
+            References = MediaLoader(args.recognize)
+            
+            # Create embedding for references
+            embedding = embed_references(args.recognize)
 
     # Set variables for video writing (when necessary)
     video_name, video_writer = None, None
