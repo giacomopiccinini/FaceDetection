@@ -1,9 +1,11 @@
 __pycache__/
 venv/
 *.jpg
+*.jpeg
 *.png
 *.ipynb
 *.hdf5
 *.pt
 *.mp4
 dlib/
+*.pkl
