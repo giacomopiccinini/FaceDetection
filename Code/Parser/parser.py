@@ -57,6 +57,15 @@ def parse():
         type=int,
         help="Blur (or not) the detected faces, and specify level of (median) blur",
     )
+    
+    parser.add_argument(
+        "--recognize",
+        const=None,
+        default=None,
+        nargs='?',
+        type=str,
+        help="If not none, use the target directory to source images for comparison",
+    )
 
     # Parse arguments
     args = parser.parse_args()
