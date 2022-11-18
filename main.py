@@ -2,6 +2,7 @@ import dlib
 import logging
 import cv2
 import os
+import pickle
 from tqdm import tqdm
 
 from Code.Parser.parser import parse
@@ -44,13 +45,17 @@ if __name__ == "__main__":
         # Check if reference is present
         if "embedding.pkl" in os.listdir(args.recognize):
             # Load reference images
-            log.info("Referece file is present")
+            log.info("Embedding file is present, loading it")
             # Load embedding
+            try:
+                embedding = pickle.loads(open(f"{args.recognize}/embedding.pkl", "rb").read())
+                log.info("Embedding correctly loaded")
+            except:
+                log.error("Failed loading embedding.pkl")
         else:
-            # Load reference images
-            log.info("Loading references")
-            References = MediaLoader(args.recognize)
-            
+            # Create embeddings
+            log.info("Embedding not found")
+            log.info("Creating embedding")
             # Create embedding for references
             embedding = embed_references(args.recognize)
 
