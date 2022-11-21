@@ -71,7 +71,6 @@ if __name__ == "__main__":
     for name, image, capture in tqdm(Data):
 
         # Detect faces
-        #boxes = detector(image, args.upsample)
         boxes = face_recognition.face_locations(image, model="cnn")
                 
         # Write boxes if not blurring
