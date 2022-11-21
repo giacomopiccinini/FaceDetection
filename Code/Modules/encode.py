@@ -60,3 +60,5 @@ def encode_references(path: str):
         
         # Write pickle
         file.write(pickle.dumps(data))
+        
+    return data
