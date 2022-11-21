@@ -74,3 +74,13 @@ Examples_Directory
 ...
                   
 ```
+
+## Issues
+
+Due to dlib implementation, you will likely incur in malloc issues. For some reason, the GPU memory will fill up extremely quickly and you will run out of memory. A simple solution could be to resize images. For instance, you could use Image Magick and run
+
+```
+mogrify -resize 256x256 ./*.png
+```
+
+to resize to 256x256 all .png images in subdirectories of the directory you are launching the script from.v
