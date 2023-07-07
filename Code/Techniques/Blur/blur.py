@@ -12,11 +12,11 @@ def blur(image: np.array, boxes: list, blurring: int) -> np.array:
         crop = image[
             box.rect.top() : box.rect.bottom(), box.rect.left() : box.rect.right()
         ]
-        
+
         # If blurring is even, convert it to odd
-        if blurring%2 == 0:
+        if blurring % 2 == 0:
             blurring += 1
-        
+
         # Blur the ROI
         blurred = cv2.medianBlur(crop, blurring)
 
