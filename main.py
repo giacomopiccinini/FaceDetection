@@ -31,7 +31,7 @@ if __name__ == "__main__":
     # Load face detector
     log.info("Loading face detection model")
     detector = dlib.cnn_face_detection_model_v1(args.model)
-    
+
     # Initialise encodings
     encodings = None
 
@@ -43,16 +43,18 @@ if __name__ == "__main__":
         # Load Stream
         log.info("Loading stream")
         Data = StreamLoader()
-        
+
     if args.recognize:
-                
+
         # Check if reference is present
         if "encodings.pkl" in os.listdir(args.recognize):
             # Load reference images
             log.info("Encodings file is present, loading it")
             # Load encodings
             try:
-                encodings = pickle.loads(open(f"{args.recognize}/encodings.pkl", "rb").read())
+                encodings = pickle.loads(
+                    open(f"{args.recognize}/encodings.pkl", "rb").read()
+                )
                 log.info("Encodings correctly loaded")
             except:
                 log.error("Failed loading encodings.pkl")
@@ -60,7 +62,7 @@ if __name__ == "__main__":
             # Create encodings
             log.info("Encodings not found")
             log.info("Creating encodings")
-            
+
             # Create encodings for references
             encodings = encode_references(args.recognize)
 
@@ -72,25 +74,25 @@ if __name__ == "__main__":
 
         # Detect faces
         boxes = face_recognition.face_locations(image, model="cnn")
-                
+
         # Write boxes if not blurring
         if not args.blur:
             # Write bounding boxes onto the image
-            boxed_image = write_boxes(image, boxes, encodings)
+            boxed_image = write_boxes(image, boxes, encodings, tolerance=0.5)
 
         # Blur image (on request)
         if args.blur:
             blurred = blur(image, boxes, args.blur)
-            
+
         # Select image to write (or show)
         image_to_write = blurred if args.blur else boxed_image
-        
+
         # When streaming, always show the result
         if Data.mode == "Stream":
             cv2.imshow(name, image_to_write)
             if cv2.waitKey(1) & 0xFF == ord("q"):
-                    Data.capture.release()
-                    break
+                Data.capture.release()
+                break
 
         # Show image (on request) if not streaming
         if args.show:
@@ -131,7 +133,7 @@ if __name__ == "__main__":
                 else:
 
                     # Fetch values
-                    fps = 8 # Data.fps
+                    fps = 8  # Data.fps
                     width = Data.width
                     height = Data.height
 
